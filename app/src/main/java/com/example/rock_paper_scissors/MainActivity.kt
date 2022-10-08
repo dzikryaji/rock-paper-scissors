@@ -2,6 +2,7 @@ package com.example.rock_paper_scissors
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import android.widget.ImageView
 import kotlin.random.Random
@@ -26,12 +27,6 @@ class MainActivity : AppCompatActivity() {
         "SCISSORS-ROCK" to false,
     )
 
-    private val optionsDrawable = mapOf(
-        "ROCK" to R.drawable.rock,
-        "PAPER" to R.drawable.paper,
-        "SCISSORS" to R.drawable.scissors
-    )
-
     private val optionsDrawableComputer = mapOf(
         "ROCK" to R.drawable.rock_computer,
         "PAPER" to R.drawable.paper_computer,
@@ -39,8 +34,6 @@ class MainActivity : AppCompatActivity() {
     )
 
     private fun randomPicker() = options[Random.nextInt(0,3)]
-
-    private fun pickDrawable(option : String): Int = optionsDrawable[option]!!
 
     private fun pickDrawableComputer(option : String): Int = optionsDrawableComputer[option]!!
 
@@ -58,16 +51,41 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initListener(){
-        rockImageButton.setOnClickListener {  }
-        paperImageButton.setOnClickListener {  }
-        scissorsImageButton.setOnClickListener {  }
+        rockImageButton.setOnClickListener {
+            userImageView.setImageResource(R.drawable.rock)
+            startGame("ROCK")
+        }
+        paperImageButton.setOnClickListener {
+            userImageView.setImageResource(R.drawable.paper)
+            startGame("PAPER")
+        }
+        scissorsImageButton.setOnClickListener {
+            userImageView.setImageResource(R.drawable.scissors)
+            startGame("SCISSORS")
+        }
     }
-    
+
+    private fun startGame(userPick: String){
+        val computerPick = randomPicker()
+        computerImageView.setImageResource(pickDrawableComputer(computerPick))
+
+        if (isDraw(userPick, computerPick)){
+            Log.i("GAME", "draw")
+            resultImageView.setImageResource(R.drawable.draw)
+        }else if (isWin(userPick, computerPick)){
+            Log.i("GAME", "win")
+            resultImageView.setImageResource(R.drawable.win)
+        } else{
+            Log.i("GAME", "lose")
+            resultImageView.setImageResource(R.drawable.lose)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
+        initComponent()
+        initListener()
 
     }
 }
